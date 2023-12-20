@@ -56,10 +56,10 @@
             <form th:action="@{/comerciales.html/__${comercial.id}__}" style="display: inline;">
                 <input type="submit" value="Ver Detalle" />
             </form>
-            <form th:action="@{/clientes/editar/}+${cliente.id} " style="display: inline;">
+            <form th:action="@{/comerciales/editar/}+${comercial.id} " style="display: inline;">
                 <input type="submit" value="Editar" />
             </form>
-            <form th:action="@{/clientes/borrar/__${cliente.}_id_}" method="post" style="display: inline;">
+            <form th:action="@{/comerciales/borrar/__${comerciales}_id_}" method="post" style="display: inline;">
                 <input type="submit" value="Eliminar" />
             </form>
         </div>
