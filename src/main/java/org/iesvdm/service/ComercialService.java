@@ -1,6 +1,7 @@
 package org.iesvdm.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.iesvdm.dao.ClienteDAO;
 import org.iesvdm.dao.ComercialDAO;
@@ -25,6 +26,13 @@ public class ComercialService {
 
     }
 
+    public Comercial one(Integer id) {
+        Optional<Comercial> optCom = ComercialDAO.find(id);
+        if (optCom.isPresent())
+            return optCom.get();
+        else
+            return null;
+    }
 
 
 }

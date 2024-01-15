@@ -7,6 +7,7 @@ import org.iesvdm.service.ClienteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -37,10 +38,16 @@ public class ClienteController {
 		return "clientes";
 		
 	}
-	
-	
-	
-	
+
+	@GetMapping("/cliente/{id}")
+	public String detalle(Model model, @PathVariable Integer id ) {
+
+		Cliente cliente = clienteService.one(id);
+		model.addAttribute("cliente", cliente);
+
+		return "detalle-cliente";
+
+	}
 	
 
 }

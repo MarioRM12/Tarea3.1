@@ -55,15 +55,19 @@
 			<div style="float: left;width: 14%" th:text="${cliente.ciudad}">ciudad</div>
 			<div style="float: left;width: 14%" th:text="${cliente.categoria}">categoría</div>
 			<div style="float: none;width: auto;overflow: hidden;">
-				<form th:action="@{/clientes/__${cliente.id}__}" style="display: inline;">
-    				<input type="submit" value="Ver Detalle" />
+
+				<form th:action="@{/cliente/__${cliente.id}__}" style="display: inline;">
+					<input type="submit" value="Ver Detalle" />
 				</form>
+
 				<form th:action="@{/clientes/editar/}+${cliente.id} " style="display: inline;">
     				<input type="submit" value="Editar" />
 				</form>
-				<form th:action="@{/clientes/borrar/__${cliente.}_id_}" method="post" style="display: inline;">					
+
+				<form th:action="@{/clientes/borrar/__${cliente.}_id_}" method="post" style="display: inline;">
     				<input type="submit" value="Eliminar" />
 				</form>
+
 			</div>
 		</div>
 	</div>
