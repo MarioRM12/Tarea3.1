@@ -70,7 +70,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 	@Override
 	public List<Cliente> getAll() {
 		
-		List<Cliente> listFab = jdbcTemplate.query(
+		List<Cliente> listCli = jdbcTemplate.query(
                 "SELECT * FROM cliente",
                 (rs, rowNum) -> new Cliente(rs.getInt("id"),
                 						 	rs.getString("nombre"),
@@ -81,9 +81,9 @@ public class ClienteDAOImpl implements ClienteDAO {
                 						 	)
         );
 		
-		log.info("Devueltos {} registros.", listFab.size());
+		log.info("Devueltos {} registros.", listCli.size());
 		
-        return listFab;
+        return listCli;
         
 	}
 
@@ -93,7 +93,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 	@Override
 	public Optional<Cliente> find(int id) {
 		
-		Cliente fab =  jdbcTemplate
+		Cliente cli =  jdbcTemplate
 				.queryForObject("SELECT * FROM cliente WHERE id = ?"
 								, (rs, rowNum) -> new Cliente(rs.getInt("id"),
             						 						rs.getString("nombre"),
@@ -103,8 +103,8 @@ public class ClienteDAOImpl implements ClienteDAO {
             						 						rs.getInt("categoría")) 
 								, id);
 		
-		if (fab != null) { 
-			return Optional.of(fab);}
+		if (cli != null) {
+			return Optional.of(cli);}
 		else { 
 			log.info("Cliente no encontrado.");
 			return Optional.empty(); }

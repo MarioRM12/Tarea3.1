@@ -16,5 +16,7 @@ public class Cliente {
 	private String apellido2;
 	private String ciudad;
 	private int categoria;
-	
+
+	public Cliente() {
+	}
 }

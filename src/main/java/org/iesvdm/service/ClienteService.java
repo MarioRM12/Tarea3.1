@@ -33,5 +33,23 @@ public class ClienteService {
 			return null;
 	}
 
+	public void newcliente(Cliente cliente) {
+
+		clienteDAO.create(cliente);
+
+	}
+
+	public void replaceCliente(Cliente cliente) {
+
+		clienteDAO.update(cliente);
+
+	}
+
+	public void deleteCliente(int id) {
+
+		clienteDAO.delete(id);
+
+	}
+
 
 }
