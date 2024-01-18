@@ -7,12 +7,17 @@
 </head>
 <body>
 <div>
-    <h1 style="align-items: center; justify-content: center">Elige</h1>
-    <form th:action="@{/clientes}" style="display: flex; float: left; justify-content: center">
+    <h1 style="float:none; margin: 0 auto;width: 100%;text-align: center">Elige que quieres consultar</h1>
+
+    <div class="clearfix">
+        <hr/>
+    </div>
+
+    <form th:action="@{/clientes}" style="display: flex; width: 50%; height: 100px; float: left; justify-content: center">
         <input type="submit" value="Ver Clientes" />
     </form>
 
-    <form th:action="@{/comerciales}" style="display: flex; float: right; justify-content: center">
+    <form th:action="@{/comerciales}" style="display: flex;width: 50%; height: 100px; float: right; justify-content: center">
         <input type="submit" value="Ver Comerciales" />
     </form>
 </div>

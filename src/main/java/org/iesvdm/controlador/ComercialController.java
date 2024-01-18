@@ -52,6 +52,16 @@ public class ComercialController {
 
     }
 
+    @PostMapping("/comerciales/crear")
+    public RedirectView submitCrear(@ModelAttribute("comerciales") Comercial comercial) {
+
+        comercialService.newcomercial(comercial);
+
+        return new RedirectView("/comerciales") ;
+
+    }
+
+
     @GetMapping("/comerciales/editar/{id}")
     public String editar(Model model, @PathVariable Integer id) {
 

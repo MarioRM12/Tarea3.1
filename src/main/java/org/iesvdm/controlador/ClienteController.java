@@ -56,13 +56,23 @@ public class ClienteController {
 
 	}
 
+	@PostMapping("/clientes/crear")
+	public RedirectView submitCrear(@ModelAttribute("cliente") Cliente cliente) {
+
+		clienteService.newcliente(cliente);
+
+		return new RedirectView("/clientes") ;
+
+	}
+
+
 	@GetMapping("/clientes/editar/{id}")
 	public String editar(Model model, @PathVariable Integer id) {
 
 		Cliente cliente = clienteService.one(id);
 		model.addAttribute("cliente", cliente);
 
-		return "editar-clientes";
+		return "editar-cliente";
 
 	}
 

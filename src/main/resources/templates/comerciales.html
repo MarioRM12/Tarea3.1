@@ -24,8 +24,8 @@
 
             <div style="position: absolute; left: 39%; top : 39%;">
 
-                <form action="/comercial/crear">
-                    <input type="submit" value="Crear">
+                <form action="/comerciales/crear">
+                    <input type="submit" value="Crear Comercial">
                 </form>
             </div>
 
@@ -59,15 +59,12 @@
             <form th:action="@{/comerciales/editar/}+${comercial.id} " style="display: inline;">
                 <input type="submit" value="Editar" />
             </form>
-            <form th:action="@{/comerciales/borrar/__${comerciales}j_id_}" method="post" style="display: inline;">
-                <input type="submit" value="Eliminar" />
+            <form th:action="@{/comerciales/borrar/__${comercial.id}__}" method="post" style="display: inline;">
+                <input type="submit" value="Eliminar" style="background-color: #ff6565;" />
             </form>
         </div>
     </div>
 </div>
-<footer>
-    <h1 th:text="#(footer)"></h1>
-</footer>
 </body>
 </body>
 </html>

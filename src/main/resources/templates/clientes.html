@@ -25,7 +25,7 @@
 				<div style="position: absolute; left: 39%; top : 39%;">
 					
 						<form action="/clientes/crear">
-							<input type="submit" value="Crear">
+							<input type="submit" value="Crear Cliente">
 						</form>
 					</div>
 				
@@ -64,8 +64,8 @@
     				<input type="submit" value="Editar" />
 				</form>
 
-				<form th:action="@{/clientes/borrar/__${cliente.}_id_}" method="post" style="display: inline;">
-    				<input type="submit" value="Eliminar" />
+				<form th:action="@{/clientes/borrar/__${cliente.id}__}" method="post" style="display: inline;">
+    				<input type="submit" value="Eliminar" style="background-color: #ff6565;" />
 				</form>
 
 			</div>
