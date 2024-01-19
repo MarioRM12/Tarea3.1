@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <title>Inicio</title>
 </head>
 <body>
@@ -13,11 +13,11 @@
         <hr/>
     </div>
 
-    <form th:action="@{/clientes}" style="display: flex; width: 50%; height: 100px; float: left; justify-content: center">
+    <form th:action="@{/clientes}">
         <input type="submit" value="Ver Clientes" />
     </form>
 
-    <form th:action="@{/comerciales}" style="display: flex;width: 50%; height: 100px; float: right; justify-content: center">
+    <form th:action="@{/comerciales}">
         <input type="submit" value="Ver Comerciales" />
     </form>
 </div>
