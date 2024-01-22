@@ -1,5 +1,10 @@
 package org.iesvdm.dao;
 
+import lombok.extern.slf4j.Slf4j;
+import org.iesvdm.dao.PedidoDAO;
+import org.iesvdm.modelo.Cliente;
+import org.iesvdm.modelo.Comercial;
+import org.iesvdm.modelo.Pedido;
 import org.iesvdm.modelo.Cliente;
 import org.iesvdm.modelo.Comercial;
 import org.iesvdm.modelo.Pedido;
@@ -13,138 +18,118 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Repository
-public class PedidoDAOImpl implements PedidoDAO{
+public class PedidoDAOImpl implements PedidoDAO {
 
-    //Plantilla jdbc inyectada automáticamente por el framework Spring, gracias a la anotación @Autowired.
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    /**
-     * Inserta en base de datos el nuevo Cliente, actualizando el id en el bean Cliente.
-     */
     @Override
-    public synchronized void create(Cliente cliente) {
+    public Optional<Cliente> findClienteBy(int pedidoId) {
 
-        //Desde java15+ se tiene la triple quote """ para bloques de texto como cadenas.
-        String sqlInsert = """
-							INSERT INTO pedido (total, fecha, id_cliente, id_comercial) 
-							VALUES  (     ?,         ?,         ?,       ?)
-						   """;
+        Cliente cliente = this.jdbcTemplate.queryForObject("""
+                            select C.* from pedido P join cliente C on P.id_cliente = C.id and P.id = '' 
+                """
+                , (rs, rowNum) -> UtilDAO.newCliente(rs), pedidoId
+        );
+
+        return null;
+    }
+
+    @Override
+    public Optional<Comercial> findComercialBy(int pedidoId) {
+        return null;
+    }
+
+    @Override
+    public List<Cliente> getAllClientesByIdPedido(int pedidoId) {
+
+        List<Cliente> clienteList = this.jdbcTemplate.query("""
+                select C.* from pedido P join cliente C on P.id_cliente = C.id  
+                and P.id = ?
+                """, (rs, rowNum) -> UtilDAO.newCliente(rs)
+                , pedidoId);
+
+        return clienteList;
+    }
+
+    @Override
+    public void create(Pedido pedido) {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         //Con recuperación de id generado
-        int rows = jdbcTemplate.update(
-                connection -> {
-                    PreparedStatement ps = connection.prepareStatement(sqlInsert, new String[] { "id" });
-                    int idx = 1;
-                    ps.setString(idx++, cliente.getNombre());
-                    ps.setString(idx++, cliente.getApellido1());
-                    ps.setString(idx++, cliente.getApellido2());
-                    ps.setString(idx++, cliente.getCiudad());
-                    ps.setInt(idx, cliente.getCategoria());
-                    return ps;
-                },keyHolder);
+        int rows = jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement("""
+                        insert into pedido ( total, fecha, id_cliente, id_comercial)
+                        values (?, ?, ?, ?);
+                        """, new String[] { "id" });
+            int idx = 1;
+            ps.setDouble(idx++, pedido.getTotal());
+            ps.setDate(idx++, new java.sql.Date(pedido.getFecha().getTime()));
+            ps.setInt(idx++, pedido.getCliente().getId());
+            ps.setInt(idx++, pedido.getComercial().getId());
+            return ps;
+        },keyHolder);
 
-        cliente.setId(keyHolder.getKey().intValue());
+        log.info("Filas creadas {}", rows);
+        log.debug("Pedido con id = {} grabado correctamente",keyHolder.getKey().intValue());
 
-        //Sin recuperación de id generado
-//		int rows = jdbcTemplate.update(sqlInsert,
-//							cliente.getNombre(),
-//							cliente.getApellido1(),
-//							cliente.getApellido2(),
-//							cliente.getCiudad(),
-//							cliente.getCategoria()
-//					);
+        pedido.setId(keyHolder.getKey().intValue());
 
-        log.info("Insertados {} registros.", rows);
     }
 
-    /**
-     * Devuelve lista con todos loa Clientes.
-     */
     @Override
-    public List<Cliente> getAll() {
+    public List<Pedido> getAll() {
 
-        List<Cliente> listCli = jdbcTemplate.query(
-                "SELECT * FROM cliente",
-                (rs, rowNum) -> new Cliente(rs.getInt("id"),
-                        rs.getString("nombre"),
-                        rs.getString("apellido1"),
-                        rs.getString("apellido2"),
-                        rs.getString("ciudad"),
-                        rs.getInt("categoría")
-                )
+        List<Pedido> listPedido = this.jdbcTemplate.query("""
+                SELECT * FROM  pedido P left join cliente C on  P.id_cliente = C.id
+                                        left join comercial CO on P.id_comercial = CO.id
+                """, (rs, rowNum) -> UtilDAO.newPedido(rs)
         );
 
-        log.info("Devueltos {} registros.", listCli.size());
-
-        return listCli;
-
+        return listPedido;
     }
 
-    /**
-     * Devuelve Optional de Cliente con el ID dado.
-     */
     @Override
-    public Optional<Cliente> find(int id) {
+    public Optional<Pedido> find(int id) {
 
-        Cliente cli =  jdbcTemplate
-                .queryForObject("SELECT * FROM cliente WHERE id = ?"
-                        , (rs, rowNum) -> new Cliente(rs.getInt("id"),
-                                rs.getString("nombre"),
-                                rs.getString("apellido1"),
-                                rs.getString("apellido2"),
-                                rs.getString("ciudad"),
-                                rs.getInt("categoría"))
-                        , id);
+        Pedido pedido= this.jdbcTemplate.queryForObject("""
+                    select * from pedido P left join cliente C on  P.id_cliente = C.id
+                                        left join comercial CO on P.id_comercial = CO.id
+                                        WHERE P.id = ?
+                """, (rs, rowNum) -> UtilDAO.newPedido(rs), id);
 
-        if (cli != null) {
-            return Optional.of(cli);}
-        else {
-            log.info("Cliente no encontrado.");
-            return Optional.empty(); }
-
+        if (pedido != null) return Optional.of(pedido);
+        log.debug("No encontrado pedido con id {} devolviendo Optional.empty()", id);
+        return Optional.empty();
     }
-    /**
-     * Actualiza Cliente con campos del bean Cliente según ID del mismo.
-     */
+
     @Override
-    public void update(Cliente cliente) {
+    public void update(Pedido pedido) {
 
-        int rows = jdbcTemplate.update("""
-										UPDATE cliente SET 
-														nombre = ?, 
-														apellido1 = ?, 
-														apellido2 = ?,
-														ciudad = ?,
-														categoría = ?  
-												WHERE id = ?
-										""", cliente.getNombre()
-                , cliente.getApellido1()
-                , cliente.getApellido2()
-                , cliente.getCiudad()
-                , cliente.getCategoria()
-                , cliente.getId());
-
-        log.info("Update de Cliente con {} registros actualizados.", rows);
+        this.jdbcTemplate.update("""
+                      update pedido set total = ?, fecha = ?, id_cliente = ?, id_comercial = ? where id = ?
+                    """, pedido.getTotal(), pedido.getFecha(), pedido.getCliente().getId(), pedido.getComercial().getId(), pedido.getId());
 
     }
 
-    /**
-     * Borra Cliente con ID proporcionado.
-     */
+    public void updateSinComercial(Pedido pedido) {
+
+        this.jdbcTemplate.update("""
+                      update pedido set total = ?, fecha = ?, id_cliente = ?, id_comercial = ? where id = ?
+                    """, pedido.getTotal(), pedido.getFecha(), pedido.getCliente().getId(), null, pedido.getId());
+
+    }
+
     @Override
     public void delete(long id) {
 
-        int rows = jdbcTemplate.update("DELETE FROM cliente WHERE id = ?", id);
+        this.jdbcTemplate.update("""
+                            delete from pedido where id = ? 
+                            """
+                , id
+        );
 
-        log.info("Delete de Cliente con {} registros eliminados.", rows);
-
-    }
-
-    @Override
-    public List<Pedido> listaPedidosPorComercial(Comercial comercial) {
-        return null;
     }
 }

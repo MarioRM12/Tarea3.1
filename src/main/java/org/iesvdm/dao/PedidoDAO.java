@@ -13,6 +13,12 @@ public interface PedidoDAO {
 
     void create(Cliente cliente);
 
+    Optional<Cliente> findClienteBy(int pedidoId);
+
+    Optional<Comercial> findComercialBy(int pedidoId);
+
+    List<Cliente> getAllClientesByIdPedido(int pedidoId);
+
     public List<Pedido> getAll();
     public Optional<Pedido> find(int id);
 
