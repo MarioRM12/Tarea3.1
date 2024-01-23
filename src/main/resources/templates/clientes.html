@@ -57,20 +57,21 @@
 			<div style="float: none;width: auto;overflow: hidden;">
 
 				<form th:action="@{/cliente/__${cliente.id}__}" style="display: inline;">
-					<input type="submit" value="Ver Detalle" />
+					<input class="" type="submit" value="Ver Detalle" />
 				</form>
 
 				<form th:action="@{/clientes/editar/}+${cliente.id} " style="display: inline;">
-    				<input type="submit" value="Editar" />
+    				<input class="" type="submit" value="Editar" />
 				</form>
 
 				<form th:action="@{/clientes/borrar/__${cliente.id}__}" method="post" style="display: inline;">
-    				<input type="submit" value="Eliminar" style="background-color: #ff6565;" />
+    				<input class="btn btn-danger" type="submit" value="Eliminar" style="background-color: #ff6565;" />
 				</form>
 
 			</div>
 		</div>
 	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </body>
 </html>
